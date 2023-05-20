@@ -1,9 +1,13 @@
 import Header from "./component/Layout/Header/Header";
+import Meals from "./component/Meals/Meals";
 
 function App() {
   return (
     <>
       <Header />
+      <main>
+        <Meals />
+      </main>
     </>
   );
 }
