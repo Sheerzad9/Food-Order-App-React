@@ -1,40 +1,45 @@
+import { useReducer } from "react";
 import CartContext from "./cart-context";
 
-const DUMMY_MEALS = [
-  {
-    id: "m1",
-    name: "Sushi",
-    description: "Finest fish and veggies",
-    price: 22.99,
-  },
-  {
-    id: "m2",
-    name: "Schnitzel",
-    description: "A german specialty!",
-    price: 16.5,
-  },
-  {
-    id: "m3",
-    name: "Barbecue Burger",
-    description: "American, raw, meaty",
-    price: 12.99,
-  },
-  {
-    id: "m4",
-    name: "Green Bowl",
-    description: "Healthy...and green...",
-    price: 18.99,
-  },
-];
+const defaultCartState = {
+  items: [],
+  totalAmount: 0,
+};
+
+const cartReducer = (state, action) => {
+  switch (action.type) {
+    case "ADD_CART_ITEM":
+      const updatedItems = state.items.concat(action.item);
+      const updatedTotalAmount =
+        state.totalAmount + action.item.price * action.item.amount;
+      return {
+        items: updatedItems,
+        totalAmount: updatedTotalAmount,
+      };
+    case "REMOVE_CART_ITEM":
+      break;
+    default:
+      return state;
+  }
+};
 
 const CartProvider = (props) => {
-  const addItemToCartHandler = (item) => {};
+  const [cartState, dispatchCartAction] = useReducer(
+    cartReducer,
+    defaultCartState
+  );
 
-  const removeItemFromCartHandler = (id) => {};
+  const addItemToCartHandler = (item) => {
+    dispatchCartAction({ type: "ADD_CART_ITEM", item });
+  };
+
+  const removeItemFromCartHandler = (id) => {
+    dispatchCartAction({ type: "REMOVE_CART_ITEM", itemId: id });
+  };
 
   const cartContext = {
-    items: DUMMY_MEALS,
-    totalAmount: 0,
+    items: cartState.items,
+    totalAmount: cartState.totalAmount,
     addItem: addItemToCartHandler,
     removeItem: removeItemFromCartHandler,
   };
